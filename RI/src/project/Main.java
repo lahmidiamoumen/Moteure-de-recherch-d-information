@@ -9,6 +9,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import project.model.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 
 public class Main extends Application {
 
@@ -45,5 +49,8 @@ public class Main extends Application {
         this.primaryStage.show();
     }
 
-    public static void main(String[] args) { launch(args); /*calling interfaces*/ }
+    public static void main(String[] args) {
+        launch(args); /*calling interfaces*/
+//        new Parsing();
+    }
 }

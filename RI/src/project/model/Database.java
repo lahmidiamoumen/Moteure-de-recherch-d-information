@@ -31,12 +31,9 @@ public class Database
     private String user = "moumen_admin"; // the user name
     private String database = "ri"; // the name of the database in which the user is defined
     public static String DOCS = "ptr";
-    private static String inverseTest = "invertedIndex";
-    private static String collection = "poidsDoc";
+    private static String inverseTest = "invertedIndex2";
+    private static String collection = "poidsDoc2";
     private static String file = "corpus";
-//    private static String inverseTest = "exp";
-//    private static String collection = "exp1";
-//    private static String file = "exp2";
     private static String stopList = "stopList";
     char[] password = {'r','o','o','o','t'}; // the password as a character array
     static private Database instance = new Database();
@@ -44,7 +41,6 @@ public class Database
     static  String NDOC = "ndoc";
     public static  String DOCID = "docid";
     public static  String POID = "poid";
-    public static  String POSITION = "position";
     static  String BALISE = "balise";
     static  String CLE = "cle";
     static  String TITRE = "titre";
@@ -55,7 +51,6 @@ public class Database
     private MongoCollection<Document> file_coll;
     private MongoDatabase db;
     List<BasicDBObject> foundDocument = null;
-
 
     /* this is the only way to create an object of Database class */
     static public Database getInstance(){return instance;}
@@ -88,7 +83,6 @@ public class Database
             System.out.println("stopList is already exists");
         }
     }
-
     /* ADD CORPUS FILE TO DATABASE */
     public void addCorpusDoc(Map<Integer,Map<String,String>> list){
         List<Document> foundDocument = file_coll.find().limit(1).into(new ArrayList<>());
@@ -105,35 +99,25 @@ public class Database
             System.out.println("Corpus is already exists");
         }
     }
-
     /* GET CORPUS DOCS FROM DATABASE */
     public List<Document> getCorpus(Integer docId){
         return  file_coll.find(eq(CLE,docId)).into(new ArrayList<>());
     }
 
-
-    public void invertedIndex(List<Collect> collects){
+    public void invertedIndex(Map<String,List<Invertedindex>> collects){
         if(!invertedIsEmpty()){ System.out.println("is not empty"); return;}
         System.out.println("Start inserting in DATABASE");
         List<Document> termRrow = new ArrayList<>();
         List<Document> docs = new ArrayList<>();
-        Map.Entry<Boolean,Boolean> balises;
-        for (Collect collect:collects) {
-            int i=0;
-            for (Map<Integer, List<Integer>> entry1:collect.docs_positions) {
-                for (Map.Entry<Integer, List<Integer>> entry:entry1.entrySet() ){
-                    balises = collect.balise.get(i).entrySet().iterator().next();
-                    termRrow.add(new Document()
-                            .append(DOCID, entry.getKey())
-                            .append(POID, collect.poids.get(i))
-                            .append(POSITION, entry.getValue())
-                            .append(BALISE, Arrays.asList(balises.getKey(), balises.getValue())));
-                }
-                i++;
+        for (Map.Entry<String,List<Invertedindex>> term:collects.entrySet()){
+            for (Invertedindex in:term.getValue()){
+                termRrow.add(new Document()
+                        .append(DOCID, in.docId)
+                        .append(POID, in.getPoids())
+                        .append(BALISE, Arrays.asList(in.getBalise().getKey(), in.getBalise().getValue())));
             }
-                docs.add(new Document(TERM, collect.term).append(NDOC, collect.nbDoc).append(DOCS,termRrow));
-                termRrow= new ArrayList<>();
-
+            docs.add(new Document(TERM, term.getKey()).append(NDOC, term.getValue().size()).append(DOCS,termRrow));
+            termRrow= new ArrayList<>();
         }
         inverse_coll.insertMany(docs);
         System.out.println("Inserting Ended");
@@ -177,41 +161,19 @@ public class Database
               return  inverse_coll.find(in(TERM,terms)).into(new ArrayList<>());
     }
 
-//    public Iterable<Document> getTermsByDocId(Integer docID){
-////        return new ArrayList<>(inverse_coll.find(eq(DOCID, docID))
-////                .into(new ArrayList<>()));
-////        AggregateIterable<Document> output = inverse_coll.aggregate(Arrays.asList(
-////                new Document("$match", new Document(DOCID, true))
-////        ));
-////        return output;
-//        BasicDBObject query = new BasicDBObject("PTR."+DOCID, docID);
-//
-//        FindIterable<Document> cursor = inverse_coll.find(query);
-//
-//        for(Document doc:cursor){
-//            System.out.println(doc);
-//        }
-//        return  cursor;
-//    }
-
     public int count(){
         return inverse_coll.find().into(new ArrayList<>()).size();
     }
 
-    public void addPoids(String toString, Double a) {
-//        if(poidsDoc.find().limit(1).into(new ArrayList<>()).isEmpty())
-            poidsDoc.insertOne(new Document(DOCID,toString).append(POID,a));
+    public void addPoids(Map<Integer,Double> cleFreq) {
+        List<Document> list = new ArrayList<>();
+        for (Map.Entry<Integer,Double> ter:cleFreq.entrySet()){
+            list.add(new Document(DOCID,ter.getKey().toString()).append(POID,ter.getValue()));
+        }
+            poidsDoc.insertMany(list);
     }
     public Double getTermsByDocId(String docId){
-        Iterable<Document> output = poidsDoc.aggregate(Arrays.asList(
-                match(eq(DOCID,docId)),
-                group("$"+DOCID ,sum(POID, "$poid"))));
-            return (Double) output.iterator().next().get(POID);
-//        Double d = 0.0;
-//        for (Document doc:poidsDoc.find(eq(DOCID,docId)).into(new ArrayList<>())){
-//            d +=(Double) doc.get(POID);
-//        }
-//        return d;
+       return (Double) poidsDoc.find(eq(DOCID,docId)).iterator().next().get(POID);
     }
 
 }

@@ -9,7 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jfoenix-1.4.0" level="project" />
     <orderEntry type="library" name="fontawesomefx-materialdesignfont-1.7.22-4" level="project" />
-    <orderEntry type="library" name="fontawesomefx-emojione-2.2.7-2" level="project" />
     <orderEntry type="library" name="fontawesomefx-commons-8.15" level="project" />
+    <orderEntry type="library" name="mongo4idea" level="project" />
   </component>
 </module>

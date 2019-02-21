@@ -14,4 +14,11 @@ public class Pair<L,R> {
     public void setValue(R r){ this.r = r; }
     public void put(L l,R r){ this.l = l;
         this.r = r; }
+
+    @Override
+    public String toString() {
+        return "[" + l +
+                ", " + r +
+                ']';
+    }
 }

@@ -39,7 +39,6 @@ public class Querying extends Indexing implements DuplicateCounting{
                 if(!score.containsKey(docId)){
                     Double a= getWeightDocQuery(docId)*2.0;
                     Double b = poidsQuery + getPoidsDocument(docId);
-                    System.out.println("doc:"+docId+", a:"+a+" , b:"+b);
                     score.put(docId,a/b);
                 }
             }
@@ -62,7 +61,7 @@ public class Querying extends Indexing implements DuplicateCounting{
         List<DocFx> list = new ArrayList<>();
         List<Document> docs = new ArrayList<>();
         for (Map.Entry<Integer, Double> entry : score.entrySet()) {
-            System.out.println(entry.getKey()+" "+entry.getValue());
+//            System.out.println(entry.getKey()+" "+entry.getValue());
             docs.addAll( Database.getInstance().getCorpus(entry.getKey()));
         }
         if (docs.isEmpty()){  list.add(new DocFx(" No matching document found","")); return list;}
@@ -97,9 +96,6 @@ public class Querying extends Indexing implements DuplicateCounting{
         return a;
     }
 
-//    private Double getPoidsDocument(Integer docID){
-//        return Database.getInstance().getPoids(String.valueOf(docID));
-//    }
 
     private Double getPoidsDocument(Integer doc){
         return  Database.getInstance().getTermsByDocId(doc.toString());

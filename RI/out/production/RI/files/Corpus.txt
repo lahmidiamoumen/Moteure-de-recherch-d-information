@@ -1,0 +1,15 @@
+<DOC>
+<DOCNO>88000001</DOCNO>
+<TITLE></TITLE>
+<ABSTRACT>
+Base donnee  binding  acetaldehyde acetaldehyde active site ribonuclease
+</ABSTRACT>
+</DOC>
+
+<DOC>
+<DOCNO>88000002</DOCNO>
+<TITLE></TITLE>
+<ABSTRACT>
+militair Reductions  breath ethanol
+</ABSTRACT>
+</DOC>
