@@ -63,8 +63,15 @@ public class Core {
     }
 
     public void finish(){
+        for (String str:titleTerm){
+            allTerms.put(str,titleFrequence.get(str).doubleValue());
+        }
         for (String str:abstractTerm){
-            allTerms.put(str,abstractFrequence.get(str)+(titleFrequence.containsKey(str) ? titleFrequence.get(str) : 0));
+            if(allTerms.containsKey(str)){
+                allTerms.put(str,abstractFrequence.get(str)+allTerms.get(str));
+            }else{
+                allTerms.put(str,abstractFrequence.get(str));
+            }
         }
     }
 }
