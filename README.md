@@ -1,8 +1,7 @@
 # information-retrieval-design
 
 # projet-recherche-d-information
-le projet du moteure de recherche première partie ( la creation du fichier invererse ) avec python 
-
+le projet du moteure de recherche première partie ( la creation du fichier invererse ) 
 Implémentation d’un SRI basé sur un fichier inverse riche en considérant dans le posting le stockage des
 informations: id du document qui contient le terme, le poids du terme et les balises où le terme apparait. La
 normalisation repose sur l’emploi de la succession des règles de transformation ci-dessous.
